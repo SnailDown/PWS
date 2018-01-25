@@ -1,0 +1,30 @@
+class maprect(object):
+    def __init__(self, c, r, colornumber = 1, rwidth=rectx+2*rectborder, rheight=recty+2*rectborder,rectborder=rectborder):
+        self.c = c
+        self.r = r
+        self.width = rwidth
+        self.height = rheight
+        self.border = rectborder
+        self.colornumber = colornumber
+
+    def draw(self):
+        if self.colornumber == 0:
+            self.color = darkgrey
+        elif self.colornumber == 1:
+            self.color = lightgrey
+        elif self.colornumber == 2:
+            self.color = lightred
+        if Visual:
+            pg.draw.rect(screen, self.color, ((self.c)*(self.width)+width/2, (self.r)*(self.height), self.width, self.height))
+
+
+def makemaprectangles():
+    global maprectangles
+    maprectangles = []
+    for x in range(columns + 2):
+        rectangles1 = []
+        
+        for y in range(rows + 2):
+            rectangles1.append(maprect(x, y))
+            
+        maprectangles.append(rectangles1)

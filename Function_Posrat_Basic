@@ -1,0 +1,11 @@
+def posrat(x,y):
+    score = 0
+    if maprectangles[x-1][y].colornumber == 1:
+        score += 1
+    if maprectangles[x+1][y].colornumber == 1:
+        score += 1
+    if maprectangles[x][y-1].colornumber == 1:
+        score += 1
+    if maprectangles[x][y+1].colornumber == 1:
+        score += 1
+    return score

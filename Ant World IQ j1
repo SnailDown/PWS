@@ -6,7 +6,7 @@ pg.init()
 '''Available anttypes: Random_e4, IQ_h1'''
 '''Available maps: Spiral(10,10), Circle, Random, D1, Empty'''
 
-user = "Denys"
+user = "tom_hanks"
 anttype = "IQ_h1"
 #anttype = "Random_e4"
 mapname = "Random"
@@ -45,12 +45,10 @@ black, white, obstaclecolor, antcolor, grey, lightgrey, lightred, darkgrey= (0,0
 
 
 def chooselocation(user):
-    if user == "Denys":
-            locationpws = "C:\Users\Denys\OneDrive\Python Scripts\PWS"
-    elif user == "Finn":
-            locationpws = "C:\Users\Finn\OneDrive\PWS (1)"
-    return locationpws
+    if user == "tom_hanks":
+            locationpws = "C:\Users\tom_hanks\Python Scripts\PWS"
 locationpws = chooselocation(user)
+
 
 #Import classes and functions
 execfile(locationpws + "\Maps\Map_" + mapname + ".py")

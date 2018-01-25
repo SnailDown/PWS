@@ -1,0 +1,172 @@
+
+import pygame as pg, math, random
+pg.init()
+
+
+'''Available anttypes: Random_e4, IQ_h1'''
+'''Available maps: Spiral(10,10), Circle, Random, D1, Empty'''
+
+user = "Denys"
+anttype = "IQ_h1"
+#anttype = "Random_e4"
+mapname = "Random"
+
+rows, columns = 50, 50
+antamount = 5
+addforward = 10
+addforward1 = 0
+obstaclefreq = 3
+Visual = 1
+
+fps = 100
+iterationmax = 500
+aexploit = 3
+
+
+
+
+#Variables
+width,height = 1200,600
+rectangles = []
+rectangles1 = []
+maprectangles = []
+rectborder = 0
+rectx = (width/2)/(columns+2) - 2*rectborder
+recty = height/(rows+2) - 2*rectborder
+time = -1
+ants, durations = [],[]
+
+if Visual:
+    #Set up screen   
+    screen = pg.display.set_mode((width,height))
+    clock = pg.time.Clock()
+black, white, obstaclecolor, antcolor, grey, lightgrey, lightred, darkgrey= (0,0,0), (255,255,255), (200,0,0),(70,173,212) , (50,50,50), (240,240,240), (255,43,43), (30,30,30)
+    #(244, 241, 66)
+
+
+def chooselocation(user):
+    if user == "Denys":
+            locationpws = "C:\Users\Denys\OneDrive\Python Scripts\PWS"
+    elif user == "Finn":
+            locationpws = "C:\Users\Finn\OneDrive\PWS (1)"
+    return locationpws
+locationpws = chooselocation(user)
+
+#Import classes and functions
+execfile(locationpws + "\Maps\Map_" + mapname + ".py")
+execfile(locationpws+"\Ant Versions Map Module\Classes and Functions\Class_Ant_" + anttype + ".py")
+execfile(locationpws+"\Ant Versions Map Module\Classes and Functions\Class_Rectangle_j2.py")
+execfile(locationpws+"\Ant Versions Map Module\Classes and Functions\Class_Maprectangle_h1.py")
+execfile(locationpws+"\Ant Versions Map Module\Classes and Functions\Function_Posrat_Basic.py")
+#execfile(locationpws+"\Ant Versions Map Module\Classes and Functions\Function_Posrat_Weighed.py")
+
+#make rectangles and maprectangles
+makerectangles()
+makemaprectangles()
+
+#print len(rectangles)
+#print len(rectangles[0])
+
+
+
+
+
+
+
+
+for i in range(antamount):
+    ants.append(ant(int(columns/2)+1,int(rows/2)+1))
+
+
+   
+   
+   
+iteration = 0   
+while iteration < iterationmax:
+#    print "a"
+    time +=1
+#    check if exit
+    for event in pg.event.get():
+        if event.type == pg.QUIT:
+            pg.quit()
+            quit(0)   
+    
+    if Visual:
+        #draw background
+        screen.fill(grey)
+
+    
+#    Move ant
+    for a in ants:
+        a.move()
+        a.pos()
+   
+   
+
+    #Draw rect
+    for column in rectangles:
+        for element in column:
+            element.cleardraw()  
+            element.draw()
+      
+    #Draw map rect
+    for column in maprectangles:
+        for element in column:
+            element.draw()            
+
+
+    stop,br = 1,0
+    for x in range (columns):
+        for y in range (rows):
+            if br == 0:
+                if maprectangles[x+1][y+1].colornumber == 0:
+                    score = posrat(x+1,y+1)
+                    if score != 0:
+#                        print score,[x,y]
+                        stop = 0
+                        br=1
+                
+
+    
+               
+    if stop == 1:
+#        print random.randint(1,20)*"a","h"
+        print iteration+1, ": ", time
+        durations.append(time)
+        printtime = 1
+        iteration += 1
+        if iteration < iterationmax:
+            time = -1
+            makerectangles()
+            makemaprectangles()
+            ants = []
+            for i in range(antamount):
+                ants.append(ant(int(columns/2)+1,int(rows/2)+1))
+#            print len(rectangles)
+#            print len(rectangles[0])
+        else:
+            avgduration = 0
+            for d in durations:
+                avgduration += d
+            avgduration = avgduration/iterationmax
+            print "average duration = ", avgduration*antamount, " steps"
+            print "ants:",antamount,anttype, ", iterations:", iterationmax, ", map:", mapname, ", size:", rows,",", columns
+            print "antamount = ", antamount
+            print "addforward = ", addforward
+            print "obstaclefreq = ", obstaclefreq
+
+            
+
+            
+        
+
+    if Visual:      
+        pg.display.update()
+        clock.tick(fps)
+
+if Visual == True:
+    pg.quit()
+    quit(0)   
+    
+else:
+    print "end"

@@ -1,0 +1,143 @@
+class ant(object):
+    def __init__(self, x, y, colornumber=1):
+        self.x = x
+        self.y = y
+        self.colornumber = colornumber
+        self.left = [True, 0]
+        self.right = [True, 0]
+        self.up = [True, 0]
+        self.down = [True, 0]
+        self.lastd = 4
+        self.opplastd = 4
+    
+    def pos(self):
+        if columns+1 > self.x > 0 and rows+1 > self.y > 0:
+            rectangles[self.x][self.y].colornumber1 = self.colornumber
+        else:
+            print "crash"
+       
+#    geeft omgeving door aan map
+    def scan(self):
+        maprectangles[self.x][self.y].colornumber = rectangles[self.x][self.y].func
+        maprectangles[self.x-1][self.y].colornumber = rectangles[self.x-1][self.y].func
+        maprectangles[self.x+1][self.y].colornumber = rectangles[self.x+1][self.y].func
+        maprectangles[self.x][self.y-1].colornumber = rectangles[self.x][self.y-1].func
+        maprectangles[self.x][self.y+1].colornumber = rectangles[self.x][self.y+1].func
+
+     
+    def look(self):
+
+        
+        self.left[0] = True
+        self.right[0] = True
+        self.up[0] = True
+        self.down[0] = True
+        
+        if rectangles[self.x-1][self.y].func == 2 or rectangles[self.x-1][self.y].colornumber == 1 or rectangles[self.x-1][self.y].colornumber1 == 1:
+            self.left[0] = False
+        else:
+            self.left[1] = posrat(self.x-1,self.y)
+            
+        if rectangles[self.x+1][self.y].func == 2 or rectangles[self.x+1][self.y].colornumber == 1 or rectangles[self.x+1][self.y].colornumber1 == 1:
+            self.right[0] = False
+        else:
+            self.right[1] = posrat(self.x+1,self.y)
+            
+        if rectangles[self.x][self.y-1].func == 2 or rectangles[self.x][self.y-1].colornumber == 1 or rectangles[self.x][self.y-1].colornumber1 == 1:
+            self.up[0] = False
+        else:
+            self.up[1] = posrat(self.x,self.y-1)
+            
+        if rectangles[self.x][self.y+1].func == 2 or rectangles[self.x][self.y+1].colornumber == 1 or rectangles[self.x][self.y+1].colornumber1 == 1:
+            self.down[0] = False
+        else:
+            self.down[1] = posrat(self.x,self.y+1)     
+     
+    def moveleft(self):
+        self.x -= 1
+    def moveright(self):
+        self.x += 1     
+    def moveup(self):
+        self.y -= 1
+    def movedown(self):
+        self.y += 1
+         
+         
+    def move(self):
+        self.look()
+        scores = []
+        if self.left[0] == True:
+            scores.append(self.left[1])
+        if self.right[0] == True:
+            scores.append(self.right[1])
+        if self.up[0] == True:
+            scores.append(self.up[1])
+        if self.down[0] == True:
+            scores.append(self.down[1]) 
+            
+        if len(scores) != 0:
+            scoremax = max(scores)
+        else:
+            scoremax = 0
+        
+        
+        best = []
+        
+        if self.left[0] == True:
+            if self.left[1] == scoremax:
+                best.append(0)
+        if self.right[0] == True:
+            if self.right[1] == scoremax:
+                best.append(1)
+        if self.up[0] == True:
+            if self.up[1] == scoremax:                
+                best.append(2)
+        if self.down[0] == True:
+            if self.down[1] == scoremax:                
+                best.append(3)
+                
+                
+        if scoremax == 0:
+            if self.lastd == 0:
+                if self.left[0] == True:
+                    for i in range(addforward):
+                        best.append(self.lastd)
+            elif self.lastd == 1:
+                if self.right[0] == True:
+                    for i in range(addforward):
+                        best.append(self.lastd)
+            elif self.lastd == 2:
+                if self.up[0] == True:
+                    for i in range(addforward):
+                        best.append(self.lastd)
+            elif self.lastd == 3:
+                if self.down[0] == True:
+                    for i in range(addforward):
+                        best.append(self.lastd)
+            
+        if len(best) > 1:
+            if self.opplastd in best:
+                best.remove(self.opplastd)
+
+        
+        if len(best) != 0:
+            randnumber = random.randint(0,len(best)-1)
+            number = best[randnumber]
+       
+            if number == 0:
+                self.moveleft()
+                self.lastd = 0
+                self.opplastd = 1
+            if number == 1:
+                self.moveright()
+                self.lastd = 1
+                self.opplastd = 0
+            if number == 2:
+                self.moveup()
+                self.lastd = 2
+                self.opplastd = 3
+            if number == 3:
+                self.movedown()
+                self.lastd = 3
+                self.opplastd = 2
+        self.scan()
